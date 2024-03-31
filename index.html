@@ -107,7 +107,7 @@
             const windspeedKmph = combinedHourlyData.map(hour => hour.windspeedKmph);
 
             // Create charts
-            const temperatureChart = createChart('temperatureChart', 'Temperatur (°C)', times, temperatures, temperaturColor, temperatureColor);
+            const temperatureChart = createChart('temperatureChart', 'Temperatur (°C)', times, temperatures, temperaturColor, temperaturColor);
             const humidityChart = createChart('humidityChart', 'Luftfeuchtigkeit (%)', times, humidities, humidityColor, humidityColor);
             const visibilityChart = createChart('visibilityChart', 'Sichtweite (km)', times, visibilities, visibilityColor, visibilityColor);
             const uvIndexChart = createChart('uvIndexChart', 'UV-Index', times, uvIndexes, uvIndexColor, uvIndexColor);
