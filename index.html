@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wetter Tabelle</title>
+    <title>Wetter Tabelle und Chart</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+
+<div class="container">
+    <h1>Wetter Chart</h1>
+    <canvas id="weatherChart" width="800" height="400"></canvas>
+</div>
 
 <div class="container">
     <h1>Wetter Tabelle für Heute</h1>
@@ -30,48 +37,6 @@
     </table>
 </div>
 
-<div class="container">
-    <h1>Wetter Tabelle für Morgen</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Zeit</th>
-                <th>Temperatur (°C)</th>
-                <th>Wetterbeschreibung</th>
-                <th>Windgeschwindigkeit (km/h)</th>
-                <th>Luftfeuchtigkeit (%)</th>
-                <th>Luftdruck (hPa)</th>
-                <th>Sichtweite (km)</th>
-                <th>UV-Index</th>
-            </tr>
-        </thead>
-        <tbody id="weatherDataTomorrow">
-            <!-- Wetterdaten werden hier eingefügt -->
-        </tbody>
-    </table>
-</div>
-
-<div class="container">
-    <h1>Wetter Tabelle für Übermorgen</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Zeit</th>
-                <th>Temperatur (°C)</th>
-                <th>Wetterbeschreibung</th>
-                <th>Windgeschwindigkeit (km/h)</th>
-                <th>Luftfeuchtigkeit (%)</th>
-                <th>Luftdruck (hPa)</th>
-                <th>Sichtweite (km)</th>
-                <th>UV-Index</th>
-            </tr>
-        </thead>
-        <tbody id="weatherDataDayAfterTomorrow">
-            <!-- Wetterdaten werden hier eingefügt -->
-        </tbody>
-    </table>
-</div>
-
 <!-- Bootstrap JS und jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
@@ -86,7 +51,8 @@
         "Mist": "Nebel",
         "Patchy rain nearby": "Stellenweise Regen in der Nähe",
         "Clear": "Klar",
-        "Overcast": "Bedeckt"
+        "Overcast": "Bedeckt",
+        "Light rain shower": "Leichter Regenschauer"
         // Add more translations as needed
     };
 
@@ -124,25 +90,63 @@
             // Daten für heute
             fillWeatherTable(data, 'weatherDataToday');
 
-            // Daten für morgen (Erhöhe das Datum um 1 Tag)
-            const tomorrow = new Date(today);
-            tomorrow.setDate(today.getDate() + 1);
-            const tomorrowDateString = tomorrow.toISOString().split('T')[0]; // Datum im Format "YYYY-MM-DD"
-            fetch(`https://wttr.in/bechtheim?format=j1&date=${tomorrowDateString}`)
-                .then(response => response.json())
-                .then(data => fillWeatherTable(data, 'weatherDataTomorrow'))
-                .catch(error => console.error('Fehler beim Abrufen der Daten für morgen:', error));
+            // Chart erstellen
+            const chartData = {
+                labels: data.weather[0].hourly.map(hour => hour.time),
+                datasets: [
+                    {
+                        label: 'Temperatur (°C)',
+                        data: data.weather[0].hourly.map(hour => hour.tempC),
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        yAxisID: 'tempYAxis'
+                    },
+                    {
+                        label: 'Luftfeuchtigkeit (%)',
+                        data: data.weather[0].hourly.map(hour => hour.humidity),
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        yAxisID: 'humidityYAxis'
+                    }
+                    // Add more datasets as needed
+                ]
+            };
 
-            // Daten für übermorgen (Erhöhe das Datum um 2 Tage)
-            const dayAfterTomorrow = new Date(today);
-            dayAfterTomorrow.setDate(today.getDate() + 2);
-            const dayAfterTomorrowDateString = dayAfterTomorrow.toISOString().split('T')[0]; // Datum im Format "YYYY-MM-DD"
-            fetch(`https://wttr.in/bechtheim?format=j1&date=${dayAfterTomorrowDateString}`)
-                .then(response => response.json())
-                .then(data => fillWeatherTable(data, 'weatherDataDayAfterTomorrow'))
-                .catch(error => console.error('Fehler beim Abrufen der Daten für übermorgen:', error));
+            const chartOptions = {
+                scales: {
+                    yAxes: [
+                        {
+                            id: 'tempYAxis',
+                            type: 'linear',
+                            position: 'left',
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Temperatur (°C)'
+                            }
+                        },
+                        {
+                            id: 'humidityYAxis',
+                            type: 'linear',
+                            position: 'right',
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Luftfeuchtigkeit (%)'
+                            }
+                        }
+                        // Add more yAxes as needed
+                    ]
+                }
+            };
+
+            const ctx = document.getElementById('weatherChart').getContext('2d');
+            const weatherChart = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: chartOptions
+            });
+
         })
-        .catch(error => console.error('Fehler beim Abrufen der Daten für heute:', error));
+        .catch(error => console.error('Fehler beim Abrufen der Wetterdaten:', error));
 </script>
 
 </body>
