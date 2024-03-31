@@ -111,7 +111,7 @@
 ,
                     {
                         label: 'Sichtweite (km)',
-                        data: data.weather[0].hourly.map(hour => hour.humidity),
+                        data: data.weather[0].hourly.map(hour => hour.visibility),
                         borderColor: 'rgba(60, 179, 113, 1)',
                         backgroundColor: 'rgba(60, 179, 113, 0.2)',
                         yAxisID: 'sichtweiteYAxis'
@@ -119,7 +119,7 @@
 ,
                     {
                         label: 'UV-Index (Stufe)',
-                        data: data.weather[0].hourly.map(hour => hour.humidity),
+                        data: data.weather[0].hourly.map(hour => hour.uvindex),
                         borderColor: 'rgba(106, 90, 205, 1)',
                         backgroundColor: 'rgba(106, 90, 205, 0.2)',
                         yAxisID: 'uvindexYAxis'
