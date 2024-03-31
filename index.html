@@ -57,11 +57,13 @@
             // Tabelle mit stündlichen Wetterdaten füllen
             const tableBody = document.getElementById('weatherData');
             hourlyData.forEach(hour => {
+                const weatherDesc = weatherDescriptions[hour.weatherDesc[0].value];
+                const translatedDesc = weatherDesc ? weatherDesc : hour.weatherDesc[0].value;
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${hour.time}</td>
                     <td>${hour.tempC}</td>
-                    <td>${weatherDescriptions[hour.weatherDesc[0].value]}</td>
+                    <td>${translatedDesc}</td>
                     <td>${hour.windspeedKmph}</td>
                     <td>${hour.humidity}</td>
                     <td>${hour.pressure}</td>
