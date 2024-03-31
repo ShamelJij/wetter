@@ -34,13 +34,7 @@
     </div>
     <div id="translations" class="mt-4">
         <h2>Übersetzungen:</h2>
-        <ul>
-            <li>Temperatur (°C) - Temperatur</li>
-            <li>Luftfeuchtigkeit (%) - Luftfeuchtigkeit</li>
-            <li>Sichtweite (km) - Sichtweite</li>
-            <li>UV-Index - UV-Index</li>
-            <li>Windgeschwindigkeit (km/h) - Windgeschwindigkeit</li>
-        </ul>
+        <ul id="translationsList"></ul>
     </div>
 </div>
 
@@ -63,7 +57,7 @@
     const pressureColor = 'rgba(140, 140, 140, 1)';
     const windspeedKmphColor = 'rgba(0, 255, 255, 1)';
 
-    // Funktion zum Erstellen eines Diagramms
+    // Function to create a chart
     function createChart(canvasId, label, labels, data, color, bgColor) {
         const ctx = document.getElementById(canvasId).getContext('2d');
         return new Chart(ctx, {
@@ -89,25 +83,30 @@
         });
     }
 
-    // Funktion zum Aktualisieren eines Diagramms
+    // Function to update a chart
     function updateChart(chart, labels, data) {
         chart.data.labels = labels;
         chart.data.datasets[0].data = data;
         chart.update();
     }
 
-    // Daten von der angegebenen URL abrufen und Diagramme erstellen
+    // Fetch data from the specified URL and create charts
     fetch('https://wttr.in/bechtheim?format=j1')
         .then(response => response.json())
         .then(data => {
             const weatherData = data.weather;
-            const hourlyData = weatherData[0].hourly;
-            const times = hourlyData.map(hour => hour.time);
-            const temperatures = hourlyData.map(hour => hour.tempC);
-            const humidities = hourlyData.map(hour => hour.humidity);
-            const visibilities = hourlyData.map(hour => hour.visibility);
-            const uvIndexes = hourlyData.map(hour => hour.uvIndex);
-            const windspeedKmph = hourlyData.map(hour => hour.windspeedKmph);
+            const firstDayData = weatherData[0];
+            const nextTwoDaysData = weatherData.slice(1, 3);
+
+            // Combine all days' hourly data
+            const combinedHourlyData = firstDayData.hourly.concat(...nextTwoDaysData.map(day => day.hourly));
+
+            const times = combinedHourlyData.map(hour => hour.time);
+            const temperatures = combinedHourlyData.map(hour => hour.tempC);
+            const humidities = combinedHourlyData.map(hour => hour.humidity);
+            const visibilities = combinedHourlyData.map(hour => hour.visibility);
+            const uvIndexes = combinedHourlyData.map(hour => hour.uvIndex);
+            const windspeedKmph = combinedHourlyData.map(hour => hour.windspeedKmph);
 
             // Create charts
             const temperatureChart = createChart('temperatureChart', 'Temperatur (°C)', times, temperatures, temperaturColor, temperatureBG);
@@ -116,39 +115,20 @@
             const uvIndexChart = createChart('uvIndexChart', 'UV-Index', times, uvIndexes, uvIndexColor, uvIndexColor);
             const windspeedKmphChart = createChart('windspeedKmphChart', 'Windgeschwindigkeit (km/h)', times, windspeedKmph, windspeedKmphColor, windspeedKmphColor);
 
-            // Next two days' data
-            const nextTwoDaysData = weatherData.slice(1, 3);
-            nextTwoDaysData.forEach(dayData => {
-                const hourlyData = dayData.hourly;
-                const times = hourlyData.map(hour => hour.time);
-                const temperatures = hourlyData.map(hour => hour.tempC);
-                const humidities = hourlyData.map(hour => hour.humidity);
-                const visibilities = hourlyData.map(hour => hour.visibility);
-                const uvIndexes = hourlyData.map(hour => hour.uvIndex);
-                const windspeedKmph = hourlyData.map(hour => hour.windspeedKmph);
-
-                temperatureChart.data.labels.push(...times);
-                temperatureChart.data.datasets[0].data.push(...temperatures);
-
-                humidityChart.data.labels.push(...times);
-                humidityChart.data.datasets[0].data.push(...humidities);
-
-                visibilityChart.data.labels.push(...times);
-                visibilityChart.data.datasets[0].data.push(...visibilities);
-
-                uvIndexChart.data.labels.push(...times);
-                uvIndexChart.data.datasets[0].data.push(...uvIndexes);
-
-                windspeedKmphChart.data.labels.push(...times);
-                windspeedKmphChart.data.datasets[0].data.push(...windspeedKmph);
-            });
-
             // Update charts
             temperatureChart.update();
             humidityChart.update();
             visibilityChart.update();
             uvIndexChart.update();
             windspeedKmphChart.update();
+
+            // Populate translations list
+            const translationsList = document.getElementById('translationsList');
+            Object.entries(data).forEach(([key, value]) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${key} - ${value}`;
+                translationsList.appendChild(listItem);
+            });
         })
         .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
 </script>
