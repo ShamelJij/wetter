@@ -36,6 +36,18 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
+    // Mapping of English to German weather descriptions
+    const weatherDescriptions = {
+        "Sunny": "Sonnig",
+        "Partly Cloudy": "Teilweise bewölkt",
+        "Light drizzle": "Leichter Nieselregen",
+        "Mist": "Nebel",
+        "Patchy rain nearby": "Stellenweise Regen in der Nähe",
+        "Clear": "Klar",
+        "Overcast": "Bedeckt"
+        // Add more translations as needed
+    };
+
     // Daten von der angegebenen URL abrufen
     fetch('https://wttr.in/bechtheim?format=j1')
         .then(response => response.json())
@@ -49,7 +61,7 @@
                 row.innerHTML = `
                     <td>${hour.time}</td>
                     <td>${hour.tempC}</td>
-                    <td>${hour.weatherDesc[0].value}</td>
+                    <td>${weatherDescriptions[hour.weatherDesc[0].value]}</td>
                     <td>${hour.windspeedKmph}</td>
                     <td>${hour.humidity}</td>
                     <td>${hour.pressure}</td>
