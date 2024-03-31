@@ -43,6 +43,19 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
+const temperaturColor = 'rgba(255, 99, 132, 1)';
+const temperatureBG = 'rgba(255, 99, 132, 0.2)';
+const humidityColor = 'rgba(54, 162, 235, 1)';
+const humidityBG = 'rgba(54, 162, 235, 0.2)';
+const visibilityColor = 'rgba(60, 179, 113, 1)';
+const visibilityBG = 'rgba(60, 179, 113, 0.2)';
+const uvIndexColor = 'rgba(106, 90, 205, 1)';
+const uvIndexBG = 'rgba(106, 90, 205, 0.2)';
+const pressureColor = 'rgba(140, 140, 140, 1)';
+const pressureBG = 'rgba(140, 140, 140, 0.2)';
+const windspeedKmphColor = 'rgba(0, 255, 255, 1)';
+const windspeedKmphBG = 'rgba(0, 255, 255, 0.2)';
+
     // Mapping of English to German weather descriptions
     const weatherDescriptions = {
         "Sunny": "Sonnig",
@@ -119,7 +132,7 @@
 ,
                     {
                         label: 'UV-Index (Stufe)',
-                        data: data.weather[0].hourly.map(hour => hour.uvindex),
+                        data: data.weather[0].hourly.map(hour => hour.uvIndex),
                         borderColor: 'rgba(106, 90, 205, 1)',
                         backgroundColor: 'rgba(106, 90, 205, 0.2)',
                         yAxisID: 'uvindexYAxis'
@@ -131,51 +144,52 @@
             const chartOptions = {
                 scales: {
                     yAxes: [
-                        {
-                            id: 'tempYAxis',
-                            type: 'linear',
-                            position: 'left',
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Temperatur (°C)'
-                            },
-ticks: {
-                    fontColor: 'rgba(255, 99, 132, 1)', // Match dataset color
+{
+                id: 'tempYAxis',
+                type: 'linear',
+                position: 'left',
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Temperatur (°C)',
+                    fontColor: temperaturColor // Use global variable
                 },
-                gridLines: {
-                    color: 'rgba(255, 99, 132, 0.2)', // Match dataset color
-                }
-
-                        },
-                        {
-                            id: 'humidityYAxis',
-                            type: 'linear',
-                            position: 'right',
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Luftfeuchtigkeit (%)'
-                            },
                 ticks: {
-                    fontColor: 'rgba(54, 162, 235, 1)', // Match dataset color
+                    fontColor: temperaturColor // Use global variable
                 },
                 gridLines: {
-                    color: 'rgba(54, 162, 235, 0.2)', // Match dataset color
+                    color: temperatureBGColor // Use global variable
                 }
-                        }
-,
+            },
+            {
+                id: 'humidityYAxis',
+                type: 'linear',
+                position: 'right',
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Luftfeuchtigkeit (%)',
+                    fontColor: humidityColor // Use global variable
+                },
+                ticks: {
+                    fontColor: humidityColor // Use global variable
+                },
+                gridLines: {
+                    color: humidityBG // Use global variable
+                }
+            },
                         {
                             id: 'sichtweiteYAxis',
                             type: 'linear',
                             position: 'right',
                             scaleLabel: {
                                 display: true,
-                                labelString: 'Sichtweite (km)'
+                                labelString: 'Sichtweite (km)',
+                    fontColor: visibilityColor, // Match dataset color
                             },
                 ticks: {
-                    fontColor: 'rgba(60, 179, 113, 1)', // Match dataset color
+                    fontColor: visibilityColor, // Match dataset color
                 },
                 gridLines: {
-                    color: 'rgba(60, 179, 113, 0.2)', // Match dataset color
+                    color: visibilityBG, // Match dataset color
                 }
                         }
 ,
@@ -188,10 +202,10 @@ ticks: {
                                 labelString: 'UV-Index (Stufe)'
                             },
                 ticks: {
-                    fontColor: 'rgba(106, 90, 205, 1)', // Match dataset color
+                    fontColor: uvIndexColor, // Match dataset color
                 },
                 gridLines: {
-                    color: 'rgba(106, 90, 205, 0.2)', // Match dataset color
+                    color: uvIndexBG, // Match dataset color
                 }
                         }
 
