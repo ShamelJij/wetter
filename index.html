@@ -124,7 +124,7 @@
 
             // Populate translations list
             const translationsList = document.getElementById('translationsList');
-            Object.entries(data).forEach(([key, value]) => {
+            Object.entries(weatherData[0]).forEach(([key, value]) => {
                 const listItem = document.createElement('li');
                 listItem.textContent = `${key} - ${value}`;
                 translationsList.appendChild(listItem);
