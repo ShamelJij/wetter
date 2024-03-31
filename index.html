@@ -1,60 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Table</title>
+    <title>Wetter Tabelle</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
 <div class="container">
-    <h1>Weather Table</h1>
+    <h1>Wetter Tabelle</h1>
     <table class="table">
         <thead>
             <tr>
-                <th>Time</th>
-                <th>Temperature (°C)</th>
-                <th>Temperature (°F)</th>
-                <th>Weather Description</th>
-                <th>Wind Speed (km/h)</th>
+                <th>Zeit</th>
+                <th>Temperatur (°C)</th>
+                <th>Wetterbeschreibung</th>
+                <th>Windgeschwindigkeit (km/h)</th>
+                <th>Luftfeuchtigkeit (%)</th>
+                <th>Luftdruck (hPa)</th>
+                <th>Sichtweite (km)</th>
+                <th>UV-Index</th>
             </tr>
         </thead>
         <tbody id="weatherData">
-            <!-- Weather data will be populated here -->
+            <!-- Wetterdaten werden hier eingefügt -->
         </tbody>
     </table>
 </div>
 
-<!-- Bootstrap JS and jQuery -->
+<!-- Bootstrap JS und jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    // Fetch data from the provided URL
+    // Daten von der angegebenen URL abrufen
     fetch('https://wttr.in/bechtheim?format=j1')
         .then(response => response.json())
         .then(data => {
-            const currentCondition = data.current_condition[0];
             const hourlyData = data.weather[0].hourly;
 
-            // Populate table with hourly weather data
+            // Tabelle mit stündlichen Wetterdaten füllen
             const tableBody = document.getElementById('weatherData');
             hourlyData.forEach(hour => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${hour.time}</td>
                     <td>${hour.tempC}</td>
-                    <td>${hour.tempF}</td>
                     <td>${hour.weatherDesc[0].value}</td>
                     <td>${hour.windspeedKmph}</td>
+                    <td>${hour.humidity}</td>
+                    <td>${hour.pressure}</td>
+                    <td>${hour.visibility}</td>
+                    <td>${hour.uvIndex}</td>
                 `;
                 tableBody.appendChild(row);
             });
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
 </script>
 
 </body>
