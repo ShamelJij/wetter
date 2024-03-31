@@ -124,9 +124,34 @@
 
             // Populate translations list
             const translationsList = document.getElementById('translationsList');
-            Object.entries(weatherData[0]).forEach(([key, value]) => {
+            const translations = {
+                'Astronomie': ['Mondbeleuchtung', 'Mondphase', 'Mondaufgang', 'Monduntergang', 'Sonnenaufgang', 'Sonnenuntergang'],
+                'Durchschnittliche Temperatur': ['Celsius', 'Fahrenheit'],
+                'Datum': null,
+                'Stündlich': ['Taupunkt (°C)', 'Taupunkt (°F)', 'Gefühlte Temperatur (°C)', 'Gefühlte Temperatur (°F)', 'Hitzeindex (°C)', 'Hitzeindex (°F)',
+                    'Windkühle (°C)', 'Windkühle (°F)', 'Windböen (km/h)', 'Windböen (Meilen)', 'Nebelwahrscheinlichkeit', 'Frostwahrscheinlichkeit',
+                    'Wahrscheinlichkeit hoher Temperaturen', 'Wahrscheinlichkeit für Überwölkung', 'Wahrscheinlichkeit für Regen', 'Wahrscheinlichkeit für trockenes Wetter',
+                    'Schneewahrscheinlichkeit', 'Sonnenscheinwahrscheinlichkeit', 'Gewitterwahrscheinlichkeit', 'Windwahrscheinlichkeit', 'Bewölkung (%)',
+                    'Strahlungsunterschied', 'Luftfeuchtigkeit (%)', 'Niederschlagsmenge (Zoll)', 'Niederschlagsmenge (mm)', 'Luftdruck (mb)', 'Luftdruck (Zoll)',
+                    'Kurzwelle (W/m^2)', 'Temperatur (°C)', 'Temperatur (°F)', 'Uhrzeit', 'UV-Index', 'Sichtweite (km)', 'Sichtweite (Meilen)', 'Wettercode',
+                    'Wetterbeschreibung', 'URL des Wettersymbols', 'Windrichtung (16 Punkte)', 'Windrichtung (Grad)', 'Windgeschwindigkeit (km/h)',
+                    'Windgeschwindigkeit (Meilen)']
+            };
+
+            Object.entries(translations).forEach(([key, value]) => {
                 const listItem = document.createElement('li');
-                listItem.textContent = `${key} - ${value}`;
+                if (Array.isArray(value)) {
+                    listItem.textContent = `${key}:`;
+                    const sublist = document.createElement('ul');
+                    value.forEach(subValue => {
+                        const subListItem = document.createElement('li');
+                        subListItem.textContent = subValue;
+                        sublist.appendChild(subListItem);
+                    });
+                    listItem.appendChild(sublist);
+                } else {
+                    listItem.textContent = `${key}: ${value}`;
+                }
                 translationsList.appendChild(listItem);
             });
         })
